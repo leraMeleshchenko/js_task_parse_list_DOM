@@ -2,19 +2,28 @@
 
 // write code here
 
-const people = Array.from(document.querySelectorAll('li'));
+const list = document.querySelector('ul');
 
-const sortedPeople = people.sort((a, b) => {
-  const salaryA = parseInt(a.getAttribute('data-salary').replace(/[$,]/g, ''));
-  const salaryB = parseInt(b.getAttribute('data-salary').replace(/[$,]/g, ''));
+function getSalary(item) {
+  return Number(item.dataset.salary.split('$').join('').split(',').join(''));
+}
 
-  return salaryB - salaryA;
-});
+function sortList() {
+  const items = [...list.children];
 
-const ul = document.querySelector('ul');
+  items.sort((a, b) => getSalary(b) - getSalary(a));
 
-ul.innerHTML = '';
+  list.append(...items);
+}
 
-sortedPeople.forEach((li) => {
-  ul.appendChild(li);
-});
+// eslint-disable-next-line no-unused-vars
+function getEmployees() {
+  return [...list.children].map((item) => ({
+    name: item.textContent.trim(),
+    position: item.dataset.position,
+    salary: getSalary(item),
+    age: Number(item.dataset.age),
+  }));
+}
+
+sortList(list);
